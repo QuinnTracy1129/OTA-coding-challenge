@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Item List</title>
+  </head>
+  <body>
+    <h2>Item List</h2>
+
+    <div>
+      <label for="sort">Sort By:</label>
+      <select id="sort">
+        <option value="name">Name</option>
+        <option value="category">Category</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="filter">Filter By Category:</label>
+      <select id="filter">
+        <option value="">All</option>
+        <option value="Category A">Category A</option>
+        <option value="Category B">Category B</option>
+        <option value="Category C">Category C</option>
+      </select>
+    </div>
+
+    <ul id="item-list"></ul>
+
+    <script>
+      // Example data source
+      const items = [
+        { id: 1, name: "Item 1", category: "Category A" },
+        { id: 2, name: "Item 2", category: "Category B" },
+        { id: 3, name: "Item 3", category: "Category A" },
+        { id: 4, name: "Item 4", category: "Category C" },
+      ];
+
+      const itemList = document.getElementById("item-list");
+      const sortSelect = document.getElementById("sort");
+      const filterSelect = document.getElementById("filter");
+
+      function loadItems() {
+        items.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.name} - ${item.category}`;
+          itemList.appendChild(li);
+        });
+      }
+
+      function sortItems(key) {
+        const sortedItems = [...items].sort((a, b) => {
+          if (a[key] < b[key]) return -1;
+          if (a[key] > b[key]) return 1;
+          return 0;
+        });
+
+        updateItemList(sortedItems);
+      }
+
+      function filterItems(category) {
+        if (category === "") {
+          updateItemList(items);
+        } else {
+          const filteredItems = items.filter(
+            item => item.category === category
+          );
+          updateItemList(filteredItems);
+        }
+      }
+
+      function updateItemList(updatedItems) {
+        while (itemList.firstChild) {
+          itemList.firstChild.remove();
+        }
+
+        updatedItems.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.name} - ${item.category}`;
+          itemList.appendChild(li);
+        });
+      }
+
+      sortSelect.addEventListener("change", function () {
+        const sortKey = this.value;
+        sortItems(sortKey);
+      });
+
+      filterSelect.addEventListener("change", function () {
+        const filterKey = this.value;
+        filterItems(filterKey);
+      });
+
+      loadItems();
+    </script>
+  </body>
+</html>
